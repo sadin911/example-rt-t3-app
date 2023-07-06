@@ -11,7 +11,7 @@ async def send_pc_stats(websocket, path):
                 await websocket.send(json.dumps(pc_stats))
             except websockets.exceptions.ConnectionClosedError:
                 break
-            await asyncio.sleep(0.1)  # Update the values every 100 milliseconds
+            await asyncio.sleep(0.500)  # Update the values every 100 milliseconds
     finally:
         await websocket.close()
 
@@ -19,7 +19,6 @@ def get_pc_stats():
     # Retrieve CPU and Memory statistics using psutil
     cpu_percent = psutil.cpu_percent()
     memory_percent = psutil.virtual_memory().percent
-
     # Retrieve network statistics
     network_stats = psutil.net_io_counters()
     network_bytes_sent = network_stats.bytes_sent
@@ -29,8 +28,8 @@ def get_pc_stats():
     pc_stats = {
         'CPU Percent': cpu_percent,
         'Memory Percent': memory_percent,
-        'Network Bytes Sent': network_bytes_sent,
-        'Network Bytes Received': network_bytes_received
+        'Network Bytes Sent': network_bytes_sent/(1024*1024*1024),
+        'Network Bytes Received': network_bytes_received/(1024*1024*1024)
     }
 
     return pc_stats

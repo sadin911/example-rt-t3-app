@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 
 const PCStatus = () => {
   const [pcStats, setPCStats] = useState(null);
@@ -16,20 +17,21 @@ const PCStatus = () => {
     };
   }, []);
 
+  // Convert pcStats object to an array of objects for use with recharts
+  const chartData = pcStats
+    ? Object.entries(pcStats).map(([key, value]) => ({ name: key, value }))
+    : [];
+
   return (
     <div>
       <h1>PC Status</h1>
       {pcStats ? (
-        <table>
-          <tbody>
-            {Object.entries(pcStats).map(([key, value]) => (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{String(value)}</td> {/* Convert value to string */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <BarChart width={1024} height={600} data={chartData}>
+          <XAxis dataKey="name" />
+          <YAxis domain={[0, 100]} />
+          <Tooltip />
+          <Bar dataKey="value" fill="#8884d8" />
+        </BarChart>
       ) : (
         <p>Loading PC status...</p>
       )}
