@@ -11,7 +11,7 @@ async def send_pc_stats(websocket, path):
                 await websocket.send(json.dumps(pc_stats))
             except websockets.exceptions.ConnectionClosedError:
                 break
-            await asyncio.sleep(0.500)  # Update the values every 100 milliseconds
+            await asyncio.sleep(0.500)
     finally:
         await websocket.close()
 
